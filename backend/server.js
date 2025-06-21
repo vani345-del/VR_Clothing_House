@@ -9,21 +9,19 @@ const checkoutRouter = require('./routes/checkoutRouter');
 const uploadRoutes = require('./routes/uploadRoutes');
 const adminRoutes = require('./controllers/adminRouts');
 const adminorderRouters = require('./controllers/adminOderRoutes');
-const productAdminController= require('./controllers/productAdminController');
+const productAdminController = require('./controllers/productAdminController');
 const paymentRoutes = require('./routes/paymentRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const cookieParser = require("cookie-parser");
 
-
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 9000;
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:5173", // Your frontend's origin
-  credentials: true,              // Allow credentials (cookies)
+  origin: "http://localhost:5173", // update to your frontend domain when deployed
+  credentials: true,
 }));
 app.use(cookieParser());
 app.use(express.json());
@@ -31,7 +29,7 @@ app.use(express.json());
 // Connect to MongoDB
 connectDB();
 
-// Root Route
+// Welcome Route
 app.get('/', (req, res) => {
   res.send('Welcome to the backend server!');
 });
@@ -41,18 +39,14 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRouter);
 app.use('/api/checkout', checkoutRouter);
-app.use("/api/upload",uploadRoutes)
+app.use('/api/upload', uploadRoutes);
 app.use('/api/orders', orderRoutes);
 
-//admin routes
-app.use("/api/admin/users",adminRoutes);
-app.use("/api/admin/products",productAdminController);
-app.use("/api/admin/orders",adminorderRouters);
-app.use("/api/payment", paymentRoutes);
+// Admin routes
+app.use('/api/admin/users', adminRoutes);
+app.use('/api/admin/products', productAdminController);
+app.use('/api/admin/orders', adminorderRouters);
+app.use('/api/payment', paymentRoutes);
 
-
-
-// Start Server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// ✅ Export app for Vercel
+module.exports = app;
