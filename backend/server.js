@@ -1,4 +1,5 @@
 const express = require('express');
+const serverless = require('serverless-http'); // ✅ Required for Vercel
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
@@ -15,38 +16,33 @@ const orderRoutes = require('./routes/orderRoutes');
 const cookieParser = require("cookie-parser");
 
 dotenv.config();
+connectDB();
 
 const app = express();
 
-// Middleware
 app.use(cors({
-  origin: "http://localhost:5173", // update to your frontend domain when deployed
-  credentials: true,
+  origin: "http://localhost:5173", // change to your deployed frontend URL later
+  credentials: true
 }));
 app.use(cookieParser());
 app.use(express.json());
 
-// Connect to MongoDB
-connectDB();
-
-// Welcome Route
-app.get('/', (req, res) => {
-  res.send('Welcome to the backend server!');
+// Welcome route
+app.get("/", (req, res) => {
+  res.send("✅ Welcome to the backend API hosted on Vercel!");
 });
 
-// API Routes
+// API routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRouter);
 app.use('/api/checkout', checkoutRouter);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/orders', orderRoutes);
-
-// Admin routes
 app.use('/api/admin/users', adminRoutes);
 app.use('/api/admin/products', productAdminController);
 app.use('/api/admin/orders', adminorderRouters);
 app.use('/api/payment', paymentRoutes);
 
-// ✅ Export app for Vercel
-module.exports = app;
+// ✅ Export serverless handler
+module.exports = serverless(app);
