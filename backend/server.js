@@ -16,6 +16,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const cookieParser = require('cookie-parser');
 
 dotenv.config();
+const PORT=process.env.PORT || 3000;
 connectDB();
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(cors({
 }));
 app.use(cookieParser());
 app.use(express.json());
+
 
 // Root route
 app.get('/', (req, res) => {
@@ -49,4 +51,6 @@ app.use('/api/admin/orders', adminOrderRoutes);
 app.use('/api/payment', paymentRoutes);
 
 // Export as Vercel serverless function
-module.exports = serverless(app);
+app.listen(PORT,()=>{
+    console.log(`server is running on the http://localhost:${PORT}`);
+});
