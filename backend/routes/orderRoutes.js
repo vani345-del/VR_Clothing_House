@@ -4,7 +4,7 @@ const {
   allOrders,
   orderDetails,
 } = require("../controllers/orderController");
-const { protect } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/authmiddleware");
 // Route to get all orders for the authenticated user
 router.get("/my-orders", protect, allOrders);   
 // Route to get order details by ID

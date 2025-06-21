@@ -1,6 +1,6 @@
 const express =require("express");
 const Order=require("../models/Order");
-const {protect}=require("../middleware/authMiddleware");
+const {protect}=require("../middleware/authmiddleware");
 
 //@route GEt /api/order/my-order
 //@desc get logged-in users order
