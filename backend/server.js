@@ -1,5 +1,5 @@
 const express = require('express');
-const serverless = require('serverless-http'); // ✅ Required for Vercel
+const serverless = require('serverless-http');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
@@ -9,11 +9,11 @@ const cartRouter = require('./routes/cartRouter');
 const checkoutRouter = require('./routes/checkoutRouter');
 const uploadRoutes = require('./routes/uploadRoutes');
 const adminRoutes = require('./controllers/adminRouts');
-const adminorderRouters = require('./controllers/adminOderRoutes');
+const adminOrderRoutes = require('./controllers/adminOderRoutes');
 const productAdminController = require('./controllers/productAdminController');
 const paymentRoutes = require('./routes/paymentRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const cookieParser = require("cookie-parser");
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 connectDB();
@@ -21,28 +21,32 @@ connectDB();
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173", // change to your deployed frontend URL later
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true
 }));
 app.use(cookieParser());
 app.use(express.json());
 
-// Welcome route
-app.get("/", (req, res) => {
-  res.send("✅ Welcome to the backend API hosted on Vercel!");
+// Root route
+app.get('/', (req, res) => {
+  res.send('✅ Welcome to the backend API hosted on Vercel!');
 });
 
-// API routes
+// Public API routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRouter);
 app.use('/api/checkout', checkoutRouter);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/orders', orderRoutes);
+
+// Admin routes
 app.use('/api/admin/users', adminRoutes);
 app.use('/api/admin/products', productAdminController);
-app.use('/api/admin/orders', adminorderRouters);
+app.use('/api/admin/orders', adminOrderRoutes);
+
+// Payment
 app.use('/api/payment', paymentRoutes);
 
-// ✅ Export serverless handler
+// Export as Vercel serverless function
 module.exports = serverless(app);
