@@ -16,26 +16,23 @@ const orderRoutes = require('./routes/orderRoutes');
 const cookieParser = require('cookie-parser');
 
 dotenv.config();
-const PORT=process.env.PORT || 3000;
 connectDB();
 
 const app = express();
 
 app.use(cors({
-  origin: 'https://vr-clothing-house-z7tm.vercel.app', // your frontend domain
+  origin: "https://vr-clothing-house-z7tm.vercel.app",
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
 
 app.use(cookieParser());
 app.use(express.json());
 
-
-// Root route
 app.get('/', (req, res) => {
   res.send('✅ Welcome to the backend API hosted on Vercel!');
 });
 
-// Public API routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRouter);
@@ -43,15 +40,11 @@ app.use('/api/checkout', checkoutRouter);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/orders', orderRoutes);
 
-// Admin routes
 app.use('/api/admin/users', adminRoutes);
 app.use('/api/admin/products', productAdminController);
 app.use('/api/admin/orders', adminOrderRoutes);
 
-// Payment
 app.use('/api/payment', paymentRoutes);
 
-// Export as Vercel serverless function
-app.listen(PORT,()=>{
-    console.log(`server is running on the http://localhost:${PORT}`);
-});
+module.exports = app;
+module.exports.handler = serverless(app);
