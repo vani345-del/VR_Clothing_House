@@ -20,7 +20,6 @@ const PORT=process.env.PORT || 3000;
 connectDB();
 
 const app = express();
-const cors = require("cors");
 
 app.use(cors({
   origin: 'https://vr-clothing-house-z7tm.vercel.app', // your frontend domain
