@@ -20,11 +20,13 @@ const PORT=process.env.PORT || 3000;
 connectDB();
 
 const app = express();
+const cors = require("cors");
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
+  origin: 'https://vr-clothing-house-z7tm.vercel.app', // your frontend domain
+  credentials: true,
 }));
+
 app.use(cookieParser());
 app.use(express.json());
 
